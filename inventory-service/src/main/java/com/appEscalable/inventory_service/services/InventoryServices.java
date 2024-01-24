@@ -19,9 +19,8 @@ public class InventoryServices {
     public BaseResponse areInStock(List<OrderItemRequest> orderItems) {
         var errorList= new ArrayList<String>();
 
-        List<String > skus = orderItems.stream().map(OrderItemRequest::getSku).toList();
+        List<String> skus = orderItems.stream().map(OrderItemRequest::getSku).toList();
         List<Inventory> inventoryList = inventoryRepository.findBySkuIn(skus);
-
 
         orderItems.forEach(orderItem->{
             var inventory = inventoryList.stream().filter(value -> value.getSku().equals(orderItem.getSku())).findFirst();
@@ -29,7 +28,7 @@ public class InventoryServices {
                errorList.add("Product with sku "+ orderItem.getSku() + "doeas not exist");
                 //Esta implementacion de este metodo no es la via mas eficiente pero para efectos educativos esta bien
             }else if(inventory.get().getQuantity() < orderItem.getQuantity()){
-                errorList.add("Product with sku "+ orderItem.getSku() + " has insufficient quantity");
+                errorList.add("Product with sku "+ orderItem.getSku() + "with insufficient quantity");
             }
         });
         return errorList.size()>0 ? new BaseResponse(errorList.toArray(new String[0])) : new BaseResponse(null);

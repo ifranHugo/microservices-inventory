@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: api-gateway
+  server:
+    port: 8080
+  eureka:
+    client:
+      service-url:
+        defaultZone: http://localhost:8761/eureka
+    instance:
+      instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  cloud:
+    gateway:
+      routes:
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/api/inventory/**
+        - id: orders-service
+          uri: lb://orders-service
+          predicates:
+            - Path=/api/order/**
+        - id: products-service
+          uri: lb://products-service
+          predicates:
+            - Path=/api/product/**
+  logging:
+    level:
+      root: INFO
+      org.springframework.cloud.gateway: DEBUG
+      org.springframework.cloud.gateway.route.RouteDefinitionRouteLocator: TRACE
+

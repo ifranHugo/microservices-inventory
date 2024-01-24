@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface InventoryRepository extends JpaRepository<Inventory, Long> {
+
+    //SELECT i FROM Inventory i WHERE i.sku = :sku
     Optional<Inventory> findBySku(String sku);
 
     List<Inventory> findBySkuIn(List<String> sku);

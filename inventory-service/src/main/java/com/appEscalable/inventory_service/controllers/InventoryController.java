@@ -22,6 +22,7 @@ public class InventoryController {
         return inventoryServices.isInStock(sku);
     }
 
+    //se invoca desde microservices orders http://localhost:8083/api/inventory/in-stock
     @PostMapping("/in-stock")
     @ResponseStatus(HttpStatus.OK)
     public BaseResponse areInStock(@RequestBody List<OrderItemRequest> orderitems) {

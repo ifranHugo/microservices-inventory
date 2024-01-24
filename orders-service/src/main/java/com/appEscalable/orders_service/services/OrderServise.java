@@ -24,7 +24,7 @@ public class OrderServise {
     public void placeOrder(OrderRequest orderRequest) {
         BaseResponse result= this.webClientBuilder.build()
                 .post()
-                .uri("http://localhost:8083/api/inventory/in-stock")
+                .uri("lb://inventory-service/api/inventory/in-stock")
                 .bodyValue(orderRequest.getOrderItems())
                 .retrieve()
                 .bodyToMono(BaseResponse.class)
@@ -60,6 +60,7 @@ public class OrderServise {
     // toma un objeto OrderItemRequest y un objeto Order, utiliza la información del
     // primero para construir un objeto OrderItem asociado al segundo, y devuelve el OrderItem resultante.
     private OrderItems mapOrderitemRequestToOrderItem(OrderItemRequest orderItemRequest, Order order) {
+        // OrderItems @Builder
         return OrderItems.builder()
                 .id(orderItemRequest.getId())
                 .sku(orderItemRequest.getSku())
