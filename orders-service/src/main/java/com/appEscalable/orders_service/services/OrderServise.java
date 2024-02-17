@@ -8,8 +8,14 @@ import com.appEscalable.orders_service.model.dtos.OrderResponse;
 import com.appEscalable.orders_service.model.entities.Order;
 import com.appEscalable.orders_service.model.entities.OrderItems;
 import com.appEscalable.orders_service.repositories.OrderRepository;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
@@ -20,15 +26,26 @@ import java.util.UUID;
 public class OrderServise {
 
     private final OrderRepository orderRepository;
+    @Autowired
+    private final RestTemplate restTemplate;
+
     private final WebClient.Builder webClientBuilder;
+
+
     public void placeOrder(OrderRequest orderRequest) {
-        BaseResponse result= this.webClientBuilder.build()
-                .post()
-                .uri("lb://inventory-service/api/inventory/in-stock")
-                .bodyValue(orderRequest.getOrderItems())
-                .retrieve()
-                .bodyToMono(BaseResponse.class)
-                .block();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<List<OrderItemRequest>> requestEntity = new HttpEntity<>(orderRequest.getOrderItems(), headers);
+
+
+        ResponseEntity<BaseResponse> responseEntity = restTemplate.exchange(
+                "http://inventory-service/api/inventory/in-stock",
+                HttpMethod.POST,
+                requestEntity,
+                BaseResponse.class);
+        BaseResponse result = responseEntity.getBody();
+
+
         if(result!=null &&!result.hasError()) {
             Order order = new Order();
             // Genera un número de pedido único utilizando UUID

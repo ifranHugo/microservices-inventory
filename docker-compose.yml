@@ -8,6 +8,7 @@ services:
       POSTGRES_DB: ms_inventory
       POSTGRES_USER: ifrancode
       POSTGRES_PASSWORD: 1234
+      POSTGRES_ROOT_PASSWORD: root
     ports:
       - 5431:5431
     expose:
@@ -38,8 +39,9 @@ services:
       POSTGRES_DB: ms_products
       POSTGRES_USER: ifrancode
       POSTGRES_PASSWORD: 1234
+      POSTGRES_ROOT_PASSWORD: root
     ports:
-      - 5432:5432
+      - 5430:5430
     expose:
-      - 5432
-    command: -p 5432
+      - 5430
+    command: -p 5430

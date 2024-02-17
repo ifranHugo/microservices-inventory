@@ -4,6 +4,7 @@ package com.appEscalable.orders_service.controllers;
 import com.appEscalable.orders_service.model.dtos.OrderRequest;
 import com.appEscalable.orders_service.model.dtos.OrderResponse;
 import com.appEscalable.orders_service.services.OrderServise;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
@@ -14,12 +15,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/order")
 @RequiredArgsConstructor
+
 public class OrderController {
 
     private final OrderServise orderService;
 
 
-    @PostMapping("")
+
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public String placeOrder(@RequestBody OrderRequest orderRequest){
         this.orderService.placeOrder(orderRequest);
